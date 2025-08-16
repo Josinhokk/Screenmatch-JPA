@@ -3,8 +3,10 @@ package br.com.alura.screenmatch.principal;
 import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Serie;
+import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,7 +24,13 @@ public class Principal {
 
     List<DadosSerie> dadosSeries = new ArrayList<>();
 
-        public void exibeMenu() {
+    private SerieRepository repositorio;
+
+    public Principal(SerieRepository repositorio) {
+        this.repositorio = repositorio;
+    }
+
+    public void exibeMenu() {
 
 
 
@@ -67,7 +75,9 @@ public class Principal {
 
     private void buscarSerieWeb() {
         DadosSerie dados = getDadosSerie();
-        dadosSeries.add(dados);
+        //dadosSeries.add(dados);
+        Serie serie = new Serie(dados);
+        repositorio.save(serie);
     }
 
     private DadosSerie getDadosSerie() {
