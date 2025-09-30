@@ -28,8 +28,12 @@ public class Serie {
     private String poster;
     private String sinopse;
 
-    @Transient
+    //relação um pra muitos
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Episodio> episodios = new ArrayList<>();
+
+    //construtor padrao
+    public Serie() {}
 
     //construtor
     public Serie(DadosSerie dadosSerie){
@@ -108,6 +112,17 @@ public class Serie {
         this.sinopse = sinopse;
     }
 
+    public List<Episodio> getEpisodios() {
+        return episodios;
+    }
+
+    public void setEpisodios(List<Episodio> episodios) {
+        //aqui estamos passando a serie dona do episodio!
+        episodios.forEach(e -> e.setSerie(this));
+        this.episodios = episodios;
+
+    }
+
     @Override
     public String toString() {
         return "Serie{" +
@@ -118,6 +133,7 @@ public class Serie {
                 ", atores='" + atores + '\'' +
                 ", poster='" + poster + '\'' +
                 ", sinopse='" + sinopse + '\'' +
-                '}';
+                ", episodios='" + episodios + '\'' +
+        '}';
     }
 }
