@@ -1,9 +1,6 @@
 package br.com.alura.screenmatch.principal;
 
-import br.com.alura.screenmatch.model.DadosSerie;
-import br.com.alura.screenmatch.model.DadosTemporada;
-import br.com.alura.screenmatch.model.Episodio;
-import br.com.alura.screenmatch.model.Serie;
+import br.com.alura.screenmatch.model.*;
 import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
@@ -45,6 +42,7 @@ public class Principal {
                 4 - Buscar serie por titulo
                 5 - Buscar series por Ator
                 6 - Buscar Top 5
+                7 - Buscar por categoria
                 
                 0 - Sair                                 
                 """;
@@ -72,6 +70,13 @@ public class Principal {
                     case 6:
                         buscarTopCinco();
                         break;
+                    case 7:
+                        buscarSeriesPorCategoria();
+
+                        break;
+                    case 8:
+                        buscarPorQuantidadeTemp();
+                        break;
                     case 0:
                         System.out.println("Saindo...");
                         break;
@@ -80,6 +85,7 @@ public class Principal {
                 }
             }
             }
+
 
 
 
@@ -166,6 +172,23 @@ public class Principal {
         topSeries.forEach(s -> System.out.println("Serie: " +s.getTitulo() + " - " + s.getAvaliacao()));
     }
 
+    private void buscarSeriesPorCategoria(){
+        System.out.println("Deseja buscar uma serie de qual categoria? ");
+        var nomeGenero = leitura.nextLine();
+        Categoria categoria = Categoria.fromPortugues(nomeGenero);//método criado acima
+        List<Serie> seriesPorCategoria = repositorio.findByGenero(categoria);
+        System.out.println("Séries da categoria " + nomeGenero);
+        seriesPorCategoria.forEach(System.out::println);
+    }
+    //Metodo do desafio
+    private void buscarPorQuantidadeTemp() {
+        System.out.println("Escolha a quantidade maxima de temporadas: ");
+        Integer tempMax = leitura.nextInt();
+        System.out.println("Qual avaliação minima: ");
+        var avaliacao = leitura.nextDouble();
+        List<Serie> SeriesTemp = repositorio.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(tempMax,  avaliacao);
+        SeriesTemp.forEach(s -> System.out.println(s.getTitulo()));
+    }
 
 }
 
