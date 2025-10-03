@@ -24,6 +24,8 @@ public class Principal {
 
     private List<Serie> series = new ArrayList<>();
 
+    private Optional<Serie> serieBuscada;
+
     public Principal(SerieRepository repositorio) {
         this.repositorio = repositorio;
     }
@@ -31,61 +33,68 @@ public class Principal {
     public void exibeMenu() {
 
 
+        var opcao = -1;
 
-            var opcao = -1;
+        while (opcao != 0) {
+            var menu = """
+                    1 - Buscar séries
+                    2 - Buscar episódios
+                    3 - Series Listadas
+                    4 - Buscar serie por titulo
+                    5 - Buscar series por Ator
+                    6 - Buscar Top 5
+                    7 - Buscar por categoria
+                    8 - Buscar por quantidade de temporadas e avaliacoes
+                    9 - Buscar episodio por trecho
+                    10 - Top 5 episodios
+                    
+                    0 - Sair                                 
+                    """;
 
-            while (opcao != 0){
-                var menu = """
-                1 - Buscar séries
-                2 - Buscar episódios
-                3 - Series Listadas
-                4 - Buscar serie por titulo
-                5 - Buscar series por Ator
-                6 - Buscar Top 5
-                7 - Buscar por categoria
-                
-                0 - Sair                                 
-                """;
+            System.out.println(menu);
+            opcao = leitura.nextInt();
+            leitura.nextLine();
 
-                System.out.println(menu);
-                opcao = leitura.nextInt();
-                leitura.nextLine();
+            switch (opcao) {
+                case 1:
+                    buscarSerieWeb();
+                    break;
+                case 2:
+                    buscarEpisodioPorSerie();
+                    break;
+                case 3:
+                    mostrarSeriesListadas();
+                    break;
+                case 4:
+                    buscarSeriePorTitulo();
+                    break;
+                case 5:
+                    buscarSeriesPorAtor();
+                    break;
+                case 6:
+                    buscarTopCinco();
+                    break;
+                case 7:
+                    buscarSeriesPorCategoria();
 
-                switch (opcao) {
-                    case 1:
-                        buscarSerieWeb();
-                        break;
-                    case 2:
-                        buscarEpisodioPorSerie();
-                        break;
-                    case 3:
-                        mostrarSeriesListadas();
-                        break;
-                    case 4:
-                        buscarSeriePorTitulo();
-                        break;
-                    case 5:
-                        buscarSeriesPorAtor();
-                        break;
-                    case 6:
-                        buscarTopCinco();
-                        break;
-                    case 7:
-                        buscarSeriesPorCategoria();
-
-                        break;
-                    case 8:
-                        buscarPorQuantidadeTemp();
-                        break;
-                    case 0:
-                        System.out.println("Saindo...");
-                        break;
-                    default:
-                        System.out.println("Opção inválida");
-                }
+                    break;
+                case 8:
+                    buscarPorQuantidadeTemp();
+                    break;
+                case 9:
+                    buscarEpisodioPorTrecho();
+                    break;
+                case 10:
+                    topEpisodiosPorSerie();
+                    break;
+                case 0:
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção inválida");
             }
-            }
-
+        }
+    }
 
 
 
@@ -104,13 +113,13 @@ public class Principal {
         return dados;
     }
 
-    private void buscarEpisodioPorSerie(){
+    private void buscarEpisodioPorSerie() {
         mostrarSeriesListadas();
         System.out.println("Escolha uma serie pelo nome: ");
         var nomeSerie = leitura.nextLine().toLowerCase();
 
         Optional<Serie> serie = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
-        if(serie.isPresent()){
+        if (serie.isPresent()) {
 
             var serieEncontrada = serie.get();
             List<DadosTemporada> temporadas = new ArrayList<>();
@@ -135,23 +144,24 @@ public class Principal {
 
     }
 
-    private void mostrarSeriesListadas(){
+    private void mostrarSeriesListadas() {
 
-            series = repositorio.findAll();
-            //pega do repositorio e tras para a gente na aplicação
+        series = repositorio.findAll();
+        //pega do repositorio e tras para a gente na aplicação
 
-            series.stream()
-                            .sorted(Comparator.comparing(Serie::getTitulo))
-                    .forEach(System.out::println);
+        series.stream()
+                .sorted(Comparator.comparing(Serie::getTitulo))
+                .forEach(System.out::println);
     }
+
     private void buscarSeriePorTitulo() {
         System.out.println("Escolha uma serie pelo nome: ");
         var nomeSerie = leitura.nextLine().toLowerCase();
-        Optional<Serie> serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
-        if(serieBuscada.isPresent()){
+        serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+        if (serieBuscada.isPresent()) {
             System.out.println("Dados da séria: " + serieBuscada.get());
 
-        }else {
+        } else {
             System.out.println("Serie não encontrada!!");
         }
 
@@ -169,10 +179,10 @@ public class Principal {
     private void buscarTopCinco() {
         //esse metodo foi criado por mim e é mais facil que parece
         List<Serie> topSeries = repositorio.findTop5ByOrderByAvaliacaoDesc();
-        topSeries.forEach(s -> System.out.println("Serie: " +s.getTitulo() + " - " + s.getAvaliacao()));
+        topSeries.forEach(s -> System.out.println("Serie: " + s.getTitulo() + " - " + s.getAvaliacao()));
     }
 
-    private void buscarSeriesPorCategoria(){
+    private void buscarSeriesPorCategoria() {
         System.out.println("Deseja buscar uma serie de qual categoria? ");
         var nomeGenero = leitura.nextLine();
         Categoria categoria = Categoria.fromPortugues(nomeGenero);//método criado acima
@@ -180,15 +190,34 @@ public class Principal {
         System.out.println("Séries da categoria " + nomeGenero);
         seriesPorCategoria.forEach(System.out::println);
     }
+
     //Metodo do desafio
     private void buscarPorQuantidadeTemp() {
         System.out.println("Escolha a quantidade maxima de temporadas: ");
         Integer totalTemporadas = leitura.nextInt();
         System.out.println("Qual avaliação minima: ");
         var avaliacao = leitura.nextDouble();
-        List<Serie> SeriesTemp = repositorio.seriesPorTemporadaEAvaliacao(totalTemporadas,  avaliacao);
+        List<Serie> SeriesTemp = repositorio.seriesPorTemporadaEAvaliacao(totalTemporadas, avaliacao);
         SeriesTemp.forEach(s -> System.out.println(s.getTitulo()));
     }
+
+    private void buscarEpisodioPorTrecho() {
+        System.out.println("Qual o nome do episodio para busca: ");
+        var trechoEpisodio = leitura.nextLine();
+        List<Episodio> episodiosEncontrados = repositorio.episodiosPorTrecho(trechoEpisodio);
+        episodiosEncontrados.forEach(s -> System.out.println(s.getTitulo()));
+    }
+
+    //pq não funciona
+    private void topEpisodiosPorSerie() {
+        buscarSeriePorTitulo();
+        if (serieBuscada.isPresent()) {
+            Serie  serie = serieBuscada.get();
+            List<Episodio> topEpisodios = repositorio.topEpisodiosPorSerie(serie);
+            topEpisodios.forEach(s -> System.out.println("Episodio = " + s.getTitulo()));
+        }
+    }
+
 
 }
 
