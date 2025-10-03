@@ -183,10 +183,10 @@ public class Principal {
     //Metodo do desafio
     private void buscarPorQuantidadeTemp() {
         System.out.println("Escolha a quantidade maxima de temporadas: ");
-        Integer tempMax = leitura.nextInt();
+        Integer totalTemporadas = leitura.nextInt();
         System.out.println("Qual avaliação minima: ");
         var avaliacao = leitura.nextDouble();
-        List<Serie> SeriesTemp = repositorio.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(tempMax,  avaliacao);
+        List<Serie> SeriesTemp = repositorio.seriesPorTemporadaEAvaliacao(totalTemporadas,  avaliacao);
         SeriesTemp.forEach(s -> System.out.println(s.getTitulo()));
     }
 
