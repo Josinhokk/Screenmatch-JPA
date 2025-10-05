@@ -4,8 +4,6 @@ import br.com.alura.screenmatch.model.*;
 import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
-import jakarta.persistence.OrderBy;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -208,16 +206,17 @@ public class Principal {
         episodiosEncontrados.forEach(s -> System.out.println(s.getTitulo()));
     }
 
-    //pq não funciona
+
     private void topEpisodiosPorSerie() {
         buscarSeriePorTitulo();
         if (serieBuscada.isPresent()) {
-            Serie  serie = serieBuscada.get();
+            Serie serie = serieBuscada.get();
             List<Episodio> topEpisodios = repositorio.topEpisodiosPorSerie(serie);
-            topEpisodios.forEach(s -> System.out.println("Episodio = " + s.getTitulo()));
+                topEpisodios.forEach(episodio -> System.out.println("Episodio = " + episodio.getTitulo()));
+            }
+
         }
     }
 
 
-}
 
