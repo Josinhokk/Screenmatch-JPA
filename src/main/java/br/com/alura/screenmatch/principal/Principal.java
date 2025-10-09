@@ -45,6 +45,7 @@ public class Principal {
                     8 - Buscar por quantidade de temporadas e avaliacoes
                     9 - Buscar episodio por trecho
                     10 - Top 5 episodios
+                    11 - Buscar episódios a partir de uma data
                     
                     0 - Sair                                 
                     """;
@@ -85,6 +86,8 @@ public class Principal {
                 case 10:
                     topEpisodiosPorSerie();
                     break;
+                case 11:
+                    buscarEpisodiosDepoisDeUmaData();
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -93,6 +96,7 @@ public class Principal {
             }
         }
     }
+
 
 
 
@@ -216,6 +220,9 @@ public class Principal {
             }
 
         }
+
+    private void buscarEpisodiosDepoisDeUmaData() {
+    }
     }
 
 
